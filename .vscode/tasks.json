@@ -1,0 +1,25 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "docker-build",
+			"label": "docker-build",
+			"platform": "python",
+			"dockerBuild": {
+				"tag": "django-postgres-celery-template:latest",
+				"dockerfile": "${workspaceFolder}/Dockerfile",
+				"context": "${workspaceFolder}",
+				"pull": true
+			}
+		},
+		{
+			"type": "shell",
+			"label": "Show Migrations",
+			"options": {
+				"cwd": "${workspaceFolder}/src"
+			},
+			"command": "python manage.py showmigrations",
+			"problemMatcher": []
+		}
+	]
+}

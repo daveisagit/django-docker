@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+  webapp:
+    extends:
+      file: docker-compose.yml
+      service: webapp
+    command:
+      [
+        "sh",
+        "-c",
+        "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 manage.py runserver 0.0.0.0:8000 --nothreading --noreload"
+      ]
+    ports:
+      - 8000:8000
+      - 5678:5678
+
+  nginx:
+    extends:
+      file: docker-compose.yml
+      service: nginx
+
+  rabbitmq:
+    extends:
+      file: docker-compose.yml
+      service: rabbitmq
+
+  celery-worker:
+    extends:
+      file: docker-compose.yml
+      service: celery-worker
+
+  celery-beat:
+    extends:
+      file: docker-compose.yml
+      service: celery-beat

@@ -1,0 +1,22 @@
+{
+    "terminal.integrated.env.windows": {
+        "PYTHONPATH": "${workspaceFolder}/src"
+    },
+    "cSpell.words": [
+        "collectstatic",
+        "createdb",
+        "createsuperuser",
+        "createuser",
+        "getenv",
+        "gunicorn",
+        "libpq",
+        "psql",
+        "psycopg",
+        "PYTHONPATH",
+        "rabbitmq",
+        "startapp",
+        "startproject",
+        "structlog",
+        "venv"
+    ]
+}

@@ -1,0 +1,7 @@
+django
+django-celery-beat
+django-celery-results
+django-structlog
+gunicorn
+psycopg 
+psycopg2

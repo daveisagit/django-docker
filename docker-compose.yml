@@ -1,0 +1,68 @@
+version: '3.4'
+
+services:
+
+  webapp:
+    image: django-postgres-celery-template:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8000:8000
+    env_file:
+      - path: ./.env
+        required: true
+      - path: ./.docker.env
+        required: false
+    volumes:
+      - ./src:/app
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - ./src/lfs:/app/lfs
+    ports:
+      - 8080:80
+    depends_on:
+      - webapp
+
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    expose:
+      - 5672
+    restart: always
+    volumes:
+      - ./src/lfs:/app/lfs
+
+  celery-worker:
+    image: django-postgres-celery-template:latest
+    command: celery -A django_postgres worker -l INFO
+    volumes:
+      - ./src:/app
+    env_file:
+      - path: ./.env
+        required: true
+      - path: ./.docker.env
+        required: false
+    depends_on:
+      - rabbitmq
+      - webapp
+
+  celery-beat:
+    image: django-postgres-celery-template:latest
+    command: celery -A django_postgres beat -l info
+    volumes:
+      - ./src/lfs:/app/lfs
+    env_file:
+      - path: ./.env
+        required: true
+      - path: ./.docker.env
+        required: false
+    depends_on:
+      - rabbitmq
+      - webapp

@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  webapp:
+    extends:
+      file: docker-compose.yml
+      service: webapp
+
+  nginx:
+    extends:
+      file: docker-compose.yml
+      service: nginx
+
+  rabbitmq:
+    extends:
+      file: docker-compose.yml
+      service: rabbitmq
+
+  celery-worker:
+    extends:
+      file: docker-compose.yml
+      service: celery-worker
+    command:
+      [
+        "sh",
+        "-c",
+        "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m celery -A django_postgres worker -l INFO -P solo"
+      ]
+    ports:
+      - 5678:5678
+
+  celery-beat:
+    extends:
+      file: docker-compose.yml
+      service: celery-beat
